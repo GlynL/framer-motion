@@ -1,0 +1,17 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.app {
+  height: 100%;
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 1200px;
+}
