@@ -16,6 +16,31 @@ const App = () => {
     setCards(cards.filter((card) => card.id !== id));
   }
 
+  function moveCard(point, index) {
+    let reorderedCards = [...cards];
+    let movedFrom = index;
+    let movedTo = index;
+
+    if (point.x <= -100) {
+      movedTo = index - 1;
+    }
+    if (point.x >= 100) {
+      movedTo = index + 1;
+    }
+    if (point.y >= 100) {
+      movedTo = index + 4;
+    }
+    if (point.y <= -100) {
+      movedTo = index - 4;
+    }
+
+    if (movedFrom !== movedTo && cards[movedFrom] && cards[movedTo]) {
+      reorderedCards[movedFrom] = cards[movedTo];
+      reorderedCards[movedTo] = cards[movedFrom];
+      setCards(reorderedCards);
+    }
+  }
+
   return (
     <div className="app">
       <div>
@@ -26,8 +51,14 @@ const App = () => {
       </button>
       <div className="list">
         <AnimatePresence>
-          {cards.map((card) => (
-            <Card key={card.id} card={card} removeCard={removeCard} />
+          {cards.map((card, i) => (
+            <Card
+              key={card.id}
+              card={card}
+              removeCard={removeCard}
+              moveCard={moveCard}
+              i={i}
+            />
           ))}
         </AnimatePresence>
       </div>
@@ -37,7 +68,7 @@ const App = () => {
 
 export default App;
 
-const Card = ({ card, removeCard }) => {
+const Card = ({ card, removeCard, moveCard, i }) => {
   const [isRemoving, setIsRemoving] = useState(false);
   const [position, setPosition] = useState({ left: 0, top: 0 });
   const cardRef = useRef(null);
@@ -63,6 +94,10 @@ const Card = ({ card, removeCard }) => {
         top: isRemoving ? position.top : "auto",
       }}
       ref={cardRef}
+      drag
+      onDragEnd={(e, drag) => moveCard(drag.point, i)}
+      dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
+      dragElastic={1}
     >
       <img src={card.img} className="card-img-top" alt="..." />
       <div className="card-body">
