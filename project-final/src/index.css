@@ -15,3 +15,7 @@ body,
   flex-wrap: wrap;
   width: 1200px;
 }
+
+img {
+  pointer-events: none;
+}

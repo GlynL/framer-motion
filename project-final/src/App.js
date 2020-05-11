@@ -68,6 +68,20 @@ const App = () => {
 
 export default App;
 
+const variants = {
+  initial: {
+    strokeWidth: 2,
+    pathLength: 0,
+  },
+  animate: {
+    pathLength: 1,
+    transition: { duration: 1, when: "afterChildren", staggerChildren: 1 },
+  },
+  hover: {
+    strokeWidth: 4,
+  },
+};
+
 const Card = ({ card, removeCard, moveCard, i }) => {
   const [isRemoving, setIsRemoving] = useState(false);
   const [position, setPosition] = useState({ left: 0, top: 0 });
@@ -92,6 +106,7 @@ const Card = ({ card, removeCard, moveCard, i }) => {
         position: isRemoving ? "absolute" : "block",
         left: isRemoving ? position.left : "auto",
         top: isRemoving ? position.top : "auto",
+        padding: "20px",
       }}
       ref={cardRef}
       drag
@@ -99,12 +114,29 @@ const Card = ({ card, removeCard, moveCard, i }) => {
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={1}
     >
+      <motion.svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#333"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        variants={variants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        onClick={handleRemove}
+      >
+        <motion.path d="M 18 6 L 6 18" variants={variants} />
+        <motion.path d="M 6 6 L 18 18" variants={variants} />
+      </motion.svg>
+
       <img src={card.img} className="card-img-top" alt="..." />
       <div className="card-body">
         <h5 className="card-title">Cool Image</h5>
-        <button onClick={handleRemove} className="btn btn-danger">
-          Remove
-        </button>
       </div>
     </motion.div>
   );
