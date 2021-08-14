@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, AnimateSharedLayout } from "framer-motion";
 
 const App = () => {
   const [cards, setCards] = useState(defaultCards);
@@ -16,21 +16,21 @@ const App = () => {
     setCards(cards.filter((card) => card.id !== id));
   }
 
-  function moveCard(point, index) {
+  function moveCard(offset, index) {
     let reorderedCards = [...cards];
     let movedFrom = index;
     let movedTo = index;
 
-    if (point.x <= -100) {
+    if (offset.x <= -100) {
       movedTo = index - 1;
     }
-    if (point.x >= 100) {
+    if (offset.x >= 100) {
       movedTo = index + 1;
     }
-    if (point.y >= 100) {
+    if (offset.y >= 100) {
       movedTo = index + 4;
     }
-    if (point.y <= -100) {
+    if (offset.y <= -100) {
       movedTo = index - 4;
     }
 
@@ -99,7 +99,6 @@ const Card = ({ card, removeCard, moveCard, i }) => {
       initial={{ x: "-300px", opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ y: "-300px", opacity: 0 }}
-      positionTransition
       className="card"
       style={{
         width: "18rem",
@@ -110,7 +109,7 @@ const Card = ({ card, removeCard, moveCard, i }) => {
       }}
       ref={cardRef}
       drag
-      onDragEnd={(e, drag) => moveCard(drag.point, i)}
+      onDragEnd={(e, drag) => moveCard(drag.offset, i)}
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={1}
     >
@@ -145,12 +144,10 @@ const Card = ({ card, removeCard, moveCard, i }) => {
 const defaultCards = [
   {
     id: 0,
-    img:
-      "https://images.unsplash.com/photo-1587900437942-8758241767ef?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&ixlib=rb-1.2.1&q=80&w=300",
+    img: "https://images.unsplash.com/photo-1587900437942-8758241767ef?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&ixlib=rb-1.2.1&q=80&w=300",
   },
   {
     id: 1,
-    img:
-      "https://images.unsplash.com/photo-1586336900429-71f0642f66fd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&ixlib=rb-1.2.1&q=80&w=300",
+    img: "https://images.unsplash.com/photo-1586336900429-71f0642f66fd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&ixlib=rb-1.2.1&q=80&w=300",
   },
 ];
